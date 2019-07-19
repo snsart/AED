@@ -1,8 +1,22 @@
 "use strict"
 
-function deepCopy(obj){
+/*function deepCopy(obj){
 	let newObj=obj instanceof Array?[]:{};
 	for(let key in obj){
+		if(typeof(obj[key])==="object"){
+			newObj[key]=deepCopy(obj[key]);
+		}else{
+			newObj[key]=obj[key];
+		}
+	}
+	return newObj;
+}
+*/
+function deepCopy(obj){
+	let newObj=obj instanceof Array?[]:{};
+	let keys=Object.keys(obj);
+	for(let i=0,len=keys.length;i<len;i++){
+		let key=keys[i];
 		if(typeof(obj[key])==="object"){
 			newObj[key]=deepCopy(obj[key]);
 		}else{
@@ -21,3 +35,5 @@ let arr=[2,4,5,{x:20,y:30}];
 let arr2=deepCopy(arr);
 arr2[3].x=50;
 console.log(arr,arr2);
+
+
