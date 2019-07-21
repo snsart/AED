@@ -27,6 +27,5 @@ let script =
   return output;
 }`;
 
-console.log(script);
 eval(script);
 parse();
