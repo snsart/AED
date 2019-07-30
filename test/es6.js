@@ -1,39 +1,31 @@
 "use strict"
 
-/*function deepCopy(obj){
-	let newObj=obj instanceof Array?[]:{};
-	for(let key in obj){
-		if(typeof(obj[key])==="object"){
-			newObj[key]=deepCopy(obj[key]);
-		}else{
-			newObj[key]=obj[key];
-		}
-	}
-	return newObj;
-}
-*/
-function deepCopy(obj){
-	let newObj=obj instanceof Array?[]:{};
-	let keys=Object.keys(obj);
-	for(let i=0,len=keys.length;i<len;i++){
-		let key=keys[i];
-		if(typeof(obj[key])==="object"){
-			newObj[key]=deepCopy(obj[key]);
-		}else{
-			newObj[key]=obj[key];
-		}
-	}
-	return newObj;
-}
+let template=`
+	<ul>
+		<%for(let i=0;i<5;i++){%>
+			<li>列表</li>
+		<%}%>
+	</ul>
+`;
 
-let obj={x:120,y:130,z:{x:20,y:30}};
-let obj2=deepCopy(obj);
-obj2.z.x=200;
-console.log(obj,obj2);
+console.log(template);
+template=template.replace(/<%/g,'`);\n').replace(/%>/g,'\necho(`');
 
-let arr=[2,4,5,{x:20,y:30}];
-let arr2=deepCopy(arr);
-arr2[3].x=50;
-console.log(arr,arr2);
+template='echo(`'+template+'`);';
+console.log(template);
 
+let script =
+`function parse(){
+  let output = "";
 
+  function echo(html){
+    output += html;
+  }
+
+  ${ template }
+
+  return output;
+}`;
+
+eval(script);
+parse();
