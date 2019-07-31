@@ -1,26 +1,22 @@
 "use strict"
 
-/*
- *基本形式：
-def boxmullersampling(mu=0, sigma=1, size=1):  
-    u = np.random.uniform(size=size)  
-    v = np.random.uniform(size=size)  
-    z = np.sqrt(-2 * np.log(u)) * np.cos(2 * np.pi * v)  
-    return mu + z * sigma 
+console.log(11.5%10);
 
- * */
-let nums=[];
-function montecarlo(){
-	while(true){
-		let r1=Math.random();
-		let probability=r1;
-		let r2=Math.random();
-		if(r2<probability){
-			return r1;
-		}
-	}
-}
-for(let i=0;i<100;i++){
-	console.log(montecarlo());
+function noise(num){
+	num=num%9;
+	let a=[3,5,2,4,6,9,1,0,5,2,8];
+	let min=a[Math.floor(num)];
+	let max=a[Math.ceil(num)];
+	let deci=num-Math.floor(num);
+	return LinearInterpolate(min, max, deci);
 }
 
+/*线性插值*/
+
+function LinearInterpolate(a, b, x){
+  return a*(1-x) + b*x
+}
+
+console.log(noise(3.2));
+console.log(noise(3.2));
+console.log(noise(3.2));
