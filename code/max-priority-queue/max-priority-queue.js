@@ -64,7 +64,6 @@ function heapMaxMum(A){
 	return A[0];
 }
 
-
 /*
  * 去掉并返回A中具有最大键值的元素
  * */
