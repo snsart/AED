@@ -68,7 +68,13 @@ function treeInsert(tree,n){
 	}	
 }
 
-/*删除操作*/
+/*删除操作
+ * 删除操作的难点在于:当要删除的点（设为x）拥有两个孩子的时候的删除操作。此时需要将删除的点替换为右孩子中最小的点，替换顺序如下:
+ * 1. 找出右孩子中最小的点y，这时y一定没有左孩子。
+ * 2. 若y的双亲为要删除的点x,则将y直接移植到x处
+ * 3. 若y的双亲不为x，假设为k,则需要把y的右孩子移植在y的地方，把y单拎出来，然后把要删除元素的右孩子变为y的右孩子。再将y移植到x处。
+ * 4. 把y移植到x处时别忘了把y的左孩子设置为x的左孩子
+ * */
 
 function transplant(tree,u,v){
 	if(u.p==null){
@@ -93,13 +99,12 @@ function treeDelete(tree,n){
 		if(y.p!=n){
 			transplant(tree,y,y.right);
 			y.right=n.right;
-			y.right.y;
+			y.right.p=y;
 		}
 		transplant(tree,n,y);
 		y.left=n.left;
 		y.left.p=y;
-	}
-	
+	}	
 }
 
 
