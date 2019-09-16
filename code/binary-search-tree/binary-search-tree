@@ -1,0 +1,128 @@
+/*
+ * 二叉搜索树的性质:每个结点左子树中的结点都不小于当前结点，右子树中的结点都不大于当前结点
+ * */
+
+let Node=function(key){
+	this.key=key;
+	this.left=null;
+	this.right=null;
+	this.p=null;
+}
+
+let Tree=function(){
+	this.root=null;
+}
+
+/*
+ * 中序遍历树
+ */
+
+function treeWalk(n){
+	if(n!=null){
+		treeWalk(n.left);
+		console.log(n.key);
+		treeWalk(n.right);
+	}
+}
+
+/*查找树的最小值*/
+function treeMinMum(tree){
+	let min=tree.root;
+	let x=min.left;
+	while(x!=null){
+		min=x;
+		x=x.left;
+	}
+	return min;
+}
+
+/*查找树的最大值*/
+function treeMaxMum(tree){
+	let max=tree.root;
+	let x=max.right;
+	while(x!=null){
+		max=x;
+		x=x.right;
+	}
+	return max;
+}
+
+/*插入操作*/
+function treeInsert(tree,n){
+	let p=null,x=tree.root;
+	while(x){
+		p=x;
+		if(n.key<p.key){
+			x=x.left;
+		}else{
+			x=x.right;
+		}
+	}
+	n.p=p;
+	if(p==null){
+		tree.root=n;
+	}else if(n.key<p.key){
+		p.left=n;
+	}else{
+		p.right=n;
+	}	
+}
+
+/*删除操作*/
+
+function transplant(tree,u,v){
+	if(u.p==null){
+		tree.root=v;
+	}else if(u==u.p.left){
+		u.p.left=v;
+	}else{
+		u.p.right=v;
+	}
+	if(v!=null){
+		v.p=u.p;
+	}
+}
+
+function treeDelete(tree,n){
+	if(n.left==null){
+		transplant(tree,n,n.right);
+	}else if(n.right=null){
+		transplant(tree,n,n.left);
+	}else{
+		y=treeMinMum(n.right);
+		if(y.p!=n){
+			transplant(tree,y,y.right);
+			y.right=n.right;
+			y.right.y;
+		}
+		transplant(tree,n,y);
+		y.left=n.left;
+		y.left.p=y;
+	}
+	
+}
+
+
+
+
+/*测试-----*/
+
+let tree=new Tree();
+treeInsert(tree,new Node(5));
+treeInsert(tree,new Node(8));
+treeInsert(tree,new Node(2));
+treeInsert(tree,new Node(4));
+treeInsert(tree,new Node(9));
+treeInsert(tree,new Node(15));
+
+treeWalk(tree.root);//2，4，5，8，9，15
+
+let n=new Node(10);
+treeInsert(tree,n);
+treeWalk(tree.root);//2，4，5，8，9，10，15
+
+treeDelete(tree,n)
+treeWalk(tree.root);//2，4，5，8，9，15
+
+let max=treeMaxMum(tree);
+console.log(max.key);//15
