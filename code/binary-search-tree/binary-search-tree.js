@@ -1,5 +1,5 @@
 /*
- * 二叉搜索树的性质:每个结点左子树中的结点都不小于当前结点，右子树中的结点都不大于当前结点
+ * 二叉搜索树的性质:每个结点左子树中的结点都不大于当前结点，右子树中的结点都不小于当前结点
  * */
 
 let Node=function(key){
@@ -17,15 +17,30 @@ let Tree=function(){
  * 中序遍历树
  */
 
-function treeWalk(n){
+function inorderTreeWalk(n){
 	if(n!=null){
-		treeWalk(n.left);
+		inorderTreeWalk(n.left);
 		console.log(n.key);
-		treeWalk(n.right);
+		inorderTreeWalk(n.right);
 	}
 }
 
+
+/*查找关键字为k的结点,x为树的根结点*/
+
+function treeSearch(x,k){
+	while(x!=null&&x.key!=k){
+		if(k<x.key){
+			x=x.left;
+		}else{
+			x=x.right;
+		}
+	}
+	return x;
+}
+
 /*查找树的最小值*/
+
 function treeMinMum(tree){
 	let min=tree.root;
 	let x=min.left;
@@ -37,6 +52,7 @@ function treeMinMum(tree){
 }
 
 /*查找树的最大值*/
+
 function treeMaxMum(tree){
 	let max=tree.root;
 	let x=max.right;
@@ -47,7 +63,41 @@ function treeMaxMum(tree){
 	return max;
 }
 
+/*
+ * 查找一个结点的后继
+ *一个结点的后继是大于x.key的最小关键字的结点
+ * */
+
+function treeSuccessor(x){
+	if(x.right!=null){
+		return treeMinMum(x.right);
+	}
+	y=x.p;
+	while(y!=null&&x==y.right){
+		x=y;
+		y=y.p;
+	}
+	return y;
+}
+
+/*
+ * 查找一个结点的前驱
+ * */
+
+function treePredecessor(x){
+	if(x.left!=null){
+		return treeMinMum(x.left);
+	}
+	y=x.p;
+	while(y!=null&&x==y.left){
+		x=y;
+		y=y.p;
+	}
+	return y;
+}
+
 /*插入操作*/
+
 function treeInsert(tree,n){
 	let p=null,x=tree.root;
 	while(x){
@@ -120,14 +170,23 @@ treeInsert(tree,new Node(4));
 treeInsert(tree,new Node(9));
 treeInsert(tree,new Node(15));
 
-treeWalk(tree.root);//2，4，5，8，9，15
+inorderTreeWalk(tree.root);//2，4，5，8，9，15
+
+let searchN=treeSearch(tree.root,4);
+console.log(searchN);
 
 let n=new Node(10);
 treeInsert(tree,n);
-treeWalk(tree.root);//2，4，5，8，9，10，15
+
+let pre=treePredecessor(n)//查找n的前驱
+console.log(pre);
+
+inorderTreeWalk(tree.root);//2，4，5，8，9，10，15
 
 treeDelete(tree,n)
-treeWalk(tree.root);//2，4，5，8，9，15
+inorderTreeWalk(tree.root);//2，4，5，8，9，15
 
 let max=treeMaxMum(tree);
 console.log(max.key);//15
+
+
