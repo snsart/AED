@@ -40,6 +40,19 @@ function inorderTreeWalk(n){
 	}
 }
 
+/*查找以x为根的树的最小值*/
+
+function treeMinMum(x){
+	let min=x;
+	x=x.left;
+	while(x!=nullNode){
+		min=x;
+		x=x.left;
+	}
+	return min;
+}
+
+
 
 /*树的左旋,假设x的右子树不为nullNode*/
 
@@ -110,7 +123,7 @@ function rbInsert(tree,z){
 	rbInsertFixup(tree,z);
 }
 
-/*维护红黑树的性质*/
+/*插入之后维护红黑树的性质不变*/
 
 function rbInsertFixup(tree,z){
 	while(z.p.color=="red"){
@@ -150,6 +163,111 @@ function rbInsertFixup(tree,z){
 }
 
 
+/*删除*/
+
+/*移植*/
+function rbTransplant(tree,u,v){
+	if(u.p==tree.nil){
+		tree.root=v;
+	}else if(u==u.p.left){
+		u.p.left=v;
+	}else{
+		u.p.right=v;
+	}
+	v.p=u.p;
+}
+
+/*删除*/
+function rbDelete(tree,z){
+	let y=z,x;
+	let y_original_color=y.color;
+	if(z.left==tree.nil){
+		x=z.right;
+		rbTransplant(tree,z,z.right);
+	}else if(z.right==tree.nil){
+		x=z.left;
+		rbTransplant(tree,z,z.left);
+	}else{
+		y=treeMinMum(z.right);
+		x=y.right;
+		y_original_color=y.color;
+		if(y.p==z){
+			x.p=y;
+		}else{
+			rbTransplant(tree,y,y.right);
+			y.right=z.right;
+			y.right.p=y;
+		}
+		rbTransplant(tree,z,y);
+		y.left=z.left;
+		y.left.p=y;
+		y.color=z.color;
+	}
+	if(y_original_color=="black"){
+		rbDeleteFixup(tree,x);	
+	}
+}
+
+/*
+ * 删除后维护红黑树的性质:
+ * 在x上累加一个black结点,然后分四种情况讨论,前三种情况可通过不断变化转为第4种情况，第四种情况可直接处理后退出循环
+ * 1. x的兄弟结点w为红色
+ * 2. x的兄弟结点w为黑色,并且w的两个孩子都为黑色
+ * 3. x的兄弟结点w为黑色,并且w的右孩子为黑色
+ * 4. x的兄弟结点w为黑色,并且w的右孩子为红色
+ */
+
+function rbDeleteFixup(tree,x){
+	while(x!=tree.root&&x.color=="black"){
+		if(x==x.p.left){
+			let w=x.p.right;
+			if(w.color=="red"){
+				w.color="black";
+				x.p.color="red";
+				leftRotate(tree,x.p);
+				w=x.p.right;
+			}
+			if(w.left.color=="black"&&w.right.color=="black"){
+				w.color="red";
+				x=x.p;
+			}else if(w.right.color=="black"){
+				w.left.color="black";
+				w.color="red";
+				rightRotate(tree,w);
+				w=x.p.right;
+			}else{
+				w.color=x.p.color;
+				x.p.color="black";
+				w.right.color="black";
+				leftRotate(tree,x.p);
+				x=tree.root;
+			}
+		}else{
+			let w=x.p.left;
+			if(w.color=="red"){
+				
+			}
+			if(w.left.color=="black"&&w.right.color=="black"){
+				w.color="red";
+				x=x.p;
+			}else if(w.left.color=="black"){
+				w.right.color="black";
+				w.color="red";
+				leftRotate(tree,w);
+				w=x.p.left;
+			}else{
+				w.color=x.p.color;
+				x.p.color="black";
+				w.left.color="black";
+				rightRotate(tree,x.p);
+				x=tree.root;
+			}	
+		}
+	}
+	x.color="black";
+}
+
+
 /*测试-----*/
 
 let tree=new Tree();
@@ -161,8 +279,15 @@ rbInsert(tree,new Node(8));
 rbInsert(tree,new Node(9));
 rbInsert(tree,new Node(10));
 rbInsert(tree,new Node(11));
-rbInsert(tree,new Node(12));
+
 
 
 console.log(tree.root);
+inorderTreeWalk(tree.root);
+
+let n=new Node(6);
+rbInsert(tree,n);
+inorderTreeWalk(tree.root);
+
+rbDelete(tree,n);
 inorderTreeWalk(tree.root);
