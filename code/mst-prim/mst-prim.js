@@ -52,15 +52,6 @@ function mstPrim(G,w,r){
 	}
 }
 
-function findSet(trees,n){
-	for(let set of trees){
-		if(set.has(n)){
-			return set;
-		}
-	}
-	return null;
-}
-
 
 /*测试-----*/
 
